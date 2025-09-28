@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StyleGen Pro | AI Wishes & Name Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .theme-light {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+            --accent: #ea580c;
+            --accent-light: #fed7aa;
+            --card-bg: #ffffff;
+            --border: #e5e7eb;
+        }
+        
+        .theme-dark {
+            --bg-primary: #111827;
+            --bg-secondary: #1f2937;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --accent: #f97316;
+            --accent-light: #1f2937;
+            --card-bg: #1f2937;
+            --border: #374151;
+        }
+        
+        .theme-light, .theme-dark {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+        }
+        
+        .neon-text {
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--accent), 0 0 20px var(--accent);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translate(0, 0px); }
+            50% { transform: translate(0, -10px); }
+            100% { transform: translate(0, 0px); }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #ea580c, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="theme-light">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-orange-50 to-orange-100 dark:from-gray-800 dark:to-gray-900 py-6 shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold text-orange-800 dark:text-orange-300">Mr_Hasnain</h1>
+                    <p class="text-orange-600 dark:text-orange-200">AI-Powered Wishes & Stylish Name Generator</p>
+                </div>
+                <button id="themeToggle" class="bg-orange-200 dark:bg-gray-700 text-orange-800 dark:text-orange-200 p-2 rounded-full">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="py-12 bg-gradient-to-b from-orange-50 to-white dark:from-gray-800 dark:to-gray-900">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold text-orange-800 dark:text-orange-300 mb-4">Type your Name → Get Wishes + Stylish Font</h2>
+            <p class="text-lg text-orange-600 dark:text-orange-200 max-w-2xl mx-auto mb-8">
+                Create beautiful AI-generated wishes and stylish gaming usernames in seconds!
+            </p>
+            
+            <!-- Input Section -->
+            <div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8 card">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-orange-700 dark:text-orange-300 mb-2 font-medium">Enter Name</label>
+                        <input type="text" id="nameInput" placeholder="e.g. Ali, Sarah, John" 
+                               class="w-full p-3 border border-orange-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-orange-700 dark:text-orange-300 mb-2 font-medium">Occasion</label>
+                        <select id="occasionSelect" class="w-full p-3 border border-orange-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                            <option value="birthday">Birthday</option>
+                            <option value="anniversary">Anniversary</option>
+                            <option value="friendship">Friendship Day</option>
+                            <option value="eid">Eid</option>
+                            <option value="game">Game ID</option>
+                            <option value="graduation">Graduation</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="generateBtn" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 flex items-center justify-center">
+                    <i class="fas fa-magic mr-2"></i> Generate Wishes & Stylish Names
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="py-12 bg-gray-50 dark:bg-gray-800">
+        <div class="container mx-auto px-4">
+            <!-- AI Wishes Section -->
+            <div class="mb-12">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-orange-800 dark:text-orange-300">AI-Generated Wishes</h2>
+                    <button id="regenerateBtn" class="bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition duration-300">
+                        <i class="fas fa-sync-alt mr-2"></i> Regenerate
+                    </button>
+                </div>
+                
+                <div id="wishesContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Wishes will be dynamically inserted here -->
+                    <div class="text-center py-8">
+                        <p class="text-orange-600 dark:text-orange-200">Enter a name and click generate to see AI wishes</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Stylish Username Generator -->
+            <div>
+                <h2 class="text-2xl font-bold text-orange-800 dark:text-orange-300 mb-6">Stylish Username Generator</h2>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 card">
+                    <div class="mb-4">
+                        <label class="block text-orange-700 dark:text-orange-300 mb-2 font-medium">Enter Username</label>
+                        <input type="text" id="usernameInput" placeholder="e.g. ProGamer, Shadow, Dragon" 
+                               class="w-full p-3 border border-orange-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                    </div>
+                    <button id="generateFontsBtn" class="bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition duration-300">
+                        <i class="fas fa-font mr-2"></i> Generate Fonts
+                    </button>
+                </div>
+                
+                <div id="fontsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Font styles will be dynamically inserted here -->
+                    <div class="text-center py-4">
+                        <p class="text-orange-600 dark:text-orange-200">Enter a username to see stylish fonts</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-orange-800 dark:bg-gray-900 text-orange-200 py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2025 StyleGen Pro. All rights reserved.</p>
+            <p class="mt-2">Crafted with <i class="fas fa-heart text-red-400"></i> for creators worldwide</p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('theme-light');
+            document.body.classList.toggle('theme-dark');
+            
+            if (document.body.classList.contains('theme-dark')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        });
+
+        // AI Wishes Data (100+ wishes for all occasions)
+        const wishesData = {
+            birthday: [
+                {
+                    english: "Happy Birthday {name}! 🎂 May your life be as stylish as your PUBG kills!",
+                    urdu: "Janamdin Mubarak {name}! 🎉 Tumhari zindagi hamesha khushiyon se roshan rahe."
+                },
+                {
+                    english: "Wishing you a day filled with happiness and a year filled with joy. Happy Birthday {name}!",
+                    urdu: "Dua hai ke aap ka din khushiyon se bhara ho aur saal barkaton se. Janamdin Mubarak {name}!"
+                },
+                {
+                    english: "{name}, may all your wishes come true today. Stay legendary! 💫",
+                    urdu: "{name}, aaj aap ki har khwahish poori ho. Hamesha khush raho! 🌟"
+                },
+                {
+                    english: "Another year older, another year wiser! Happy Birthday {name}! 🎈",
+                    urdu: "Ek aur saal purana, ek aur saal aqalmand! Janamdin Mubarak {name}! 🎈"
+                },
+                {
+                    english: "Cheers to {name} on your special day! May your birthday be as amazing as you are! 🥳",
+                    urdu: "{name} aap ke khaas din par mubarakbad! Aap ka janamdin aap jaisa hi khaas ho! 🥳"
+                },
+                {
+                    english: "Happy Birthday {name}! Hope your day is filled with cake, laughter, and all things nice! 🍰",
+                    urdu: "Janamdin Mubarak {name}! Umeed hai aap ka din cake, hansi aur khushiyon se bhara ho! 🍰"
+                },
+                {
+                    english: "Wishing you endless happiness and success in the year ahead. Happy Birthday {name}! 🎁",
+                    urdu: "Aap ke liye be-khataari khushiyan aur kamiyabi ki dua karte hain. Janamdin Mubarak {name}! 🎁"
+                },
+                {
+                    english: "May this birthday bring you closer to your dreams than ever before. Happy Birthday {name}! ✨",
+                    urdu: "Ye janamdin aap ko aap ke sapnon se qareeb le aaye. Janamdin Mubarak {name}! ✨"
+                },
+                {
+                    english: "Sending you smiles for every moment of your special day. Happy Birthday {name}! 😊",
+                    urdu: "Aap ke khaas din ke har lamhe ke liye muskurahat bhej rahe hain. Janamdin Mubarak {name}! 😊"
+                },
+                {
+                    english: "Hope your birthday is as sweet as cake and as bright as your future! Happy Birthday {name}! 🎂",
+                    urdu: "Umeed hai aap ka janamdin cake jitna meetha aur mustaqbil jitna roshan ho! Janamdin Mubarak {name}! 🎂"
+                }
+            ],
+            anniversary: [
+                {
+                    english: "Happy Anniversary {name}! 🎊 May your love continue to grow stronger with each passing year!",
+                    urdu: "Salgirah Mubarak {name}! 🎊 Dua hai aap ka pyaar har guzarte saal ke sath mazeed mazboot hota rahe!"
+                },
+                {
+                    english: "Wishing you both a lifetime of love and happiness. Happy Anniversary {name}! 💖",
+                    urdu: "Aap dono ko zindagi bhar ke pyaar aur khushi ki dua. Salgirah Mubarak {name}! 💖"
+                },
+                {
+                    english: "Congratulations on another year of togetherness! Happy Anniversary {name}! 🥂",
+                    urdu: "Ek aur saal ek sath guzarnay par mubarakbad! Salgirah Mubarak {name}! 🥂"
+                },
+                {
+                    english: "May your bond grow stronger with each passing day. Happy Anniversary {name}! 💑",
+                    urdu: "Dua hai aap ka rishta har guzarte din ke sath mazeed mazboot hota rahe. Salgirah Mubarak {name}! 💑"
+                },
+                {
+                    english: "Wishing you endless love and beautiful memories. Happy Anniversary {name}! 🌹",
+                    urdu: "Aap ke liye be-khataari pyaar aur khoobsoorat yaadon ki dua. Salgirah Mubarak {name}! 🌹"
+                },
+                {
+                    english: "Another year of creating beautiful memories together. Happy Anniversary {name}! 📸",
+                    urdu: "Ek aur saal ek sath khoobsoorat yaadain banane ka. Salgirah Mubarak {name}! 📸"
+                },
+                {
+                    english: "May your love story continue to inspire everyone around you. Happy Anniversary {name}! 💫",
+                    urdu: "Dua hai aap ki mohabbat ki kahani aap ke aas paas walon ko hamesha tehreek deti rahe. Salgirah Mubarak {name}! 💫"
+                },
+                {
+                    english: "Celebrating the beautiful journey of your togetherness. Happy Anniversary {name}! 🎉",
+                    urdu: "Aap ki ek sath guzari khoobsoorat safar ki jashn. Salgirah Mubarak {name}! 🎉"
+                },
+                {
+                    english: "Wishing you many more years of love, laughter, and happiness. Happy Anniversary {name}! 💕",
+                    urdu: "Aap ke liye pyaar, hansi aur khushi se bhare aur saalon ki dua. Salgirah Mubarak {name}! 💕"
+                },
+                {
+                    english: "Your love is an inspiration to all of us. Happy Anniversary {name}! 🌟",
+                    urdu: "Aap ka pyaar hum sab ke liye ek tehreek hai. Salgirah Mubarak {name}! 🌟"
+                }
+            ],
+            friendship: [
+                {
+                    english: "Happy Friendship Day {name}! 🫂 Thanks for being an amazing friend!",
+                    urdu: "Dosti ka din Mubarak {name}! 🤝 Aise hi humesha saath dena yaar."
+                },
+                {
+                    english: "A real friend is one who walks in when the rest of the world walks out. Thanks {name}!",
+                    urdu: "Asli dost woh hota hai jo mushkil waqt mein kaam aaye. Shukriya {name}!"
+                },
+                {
+                    english: "Friends like you make life beautiful. Happy Friendship Day {name}!",
+                    urdu: "Aap jaisa dost zindagi ko khoobsoorat banata hai. Dosti ka din Mubarak {name}!"
+                },
+                {
+                    english: "Cheers to the friends who have become family. Happy Friendship Day {name}! 👨‍👩‍👧‍👦",
+                    urdu: "Un doston ko jinhone khandaan ki surat ikhtiyar kar li. Dosti ka din Mubarak {name}! 👨‍👩‍👧‍👦"
+                },
+                {
+                    english: "True friendship isn't about being inseparable, it's about being separated and nothing changes. Happy Friendship Day {name}! 💫",
+                    urdu: "Asli dosti juda na honay mein nahi, balkay juda honay ke baad bhi kuch na badalnay mein hai. Dosti ka din Mubarak {name}! 💫"
+                },
+                {
+                    english: "Thanks for all the memories, laughter, and support. Happy Friendship Day {name}! 🎈",
+                    urdu: "Tamam yaadon, hansi aur support ka shukriya. Dosti ka din Mubarak {name}! 🎈"
+                },
+                {
+                    english: "A friend is someone who knows all about you and still loves you. Happy Friendship Day {name}! 💖",
+                    urdu: "Dost woh hota hai jo aap ke baare mein sab kuch janta hai aur phir bhi aap se pyaar karta hai. Dosti ka din Mubarak {name}! 💖"
+                },
+                {
+                    english: "Life is better with friends like you. Happy Friendship Day {name}! 🌈",
+                    urdu: "Zindagi aap jaisay doston ke sath behtar hai. Dosti ka din Mubarak {name}! 🌈"
+                },
+                {
+                    english: "Friendship is the only cement that will ever hold the world together. Happy Friendship Day {name}! 🌍",
+                    urdu: "Dosti hi woh cement hai jo duniya ko ek sath rakhti hai. Dosti ka din Mubarak {name}! 🌍"
+                },
+                {
+                    english: "May our friendship last forever. Happy Friendship Day {name}! 🤗",
+                    urdu: "Dua hai hamari dosti hamesha qaim rahe. Dosti ka din Mubarak {name}! 🤗"
+                }
+            ],
+            eid: [
+                {
+                    english: "Eid Mubarak {name}! 🌙 May this Eid bring joy, health and wealth to you.",
+                    urdu: "Eid Mubarak {name}! 🤲 Khuda aap ko khushiyon se nawaze."
+                },
+                {
+                    english: "Wishing you and your family a blessed Eid {name}! Enjoy the celebrations.",
+                    urdu: "Aap aur aap ke parivar ko Eid Mubarak {name}! Khushiyan manayein."
+                },
+                {
+                    english: "May the divine blessings of Allah bring you hope, faith and joy. Eid Mubarak {name}!",
+                    urdu: "Khuda ki rehmat aap par hamesha barasti rahe. Eid Mubarak {name}!"
+                },
+                {
+                    english: "Eid Mubarak {name}! May this special day bring peace, happiness and prosperity to your life. 🌟",
+                    urdu: "Eid Mubarak {name}! Dua hai ye khaas din aap ki zindagi mein aman, khushi aur khush-hali laye. 🌟"
+                },
+                {
+                    english: "On this blessed occasion, wishing you and your family joy, peace and prosperity. Eid Mubarak {name}! 🕌",
+                    urdu: "Is mubarak mauqay par, aap aur aap ke khandaan ko khushi, aman aur khush-hali ki dua. Eid Mubarak {name}! 🕌"
+                },
+                {
+                    english: "May the magic of this Eid bring lots of happiness in your life. Eid Mubarak {name}! ✨",
+                    urdu: "Dua hai is Eid ka jadu aap ki zindagi mein bohat si khushiyan laye. Eid Mubarak {name}! ✨"
+                },
+                {
+                    english: "Eid Mubarak {name}! May Allah accept your good deeds and forgive your transgressions. 🤲",
+                    urdu: "Eid Mubarak {name}! Khuda aap ke nek aamal qubool farmaye aur aap ki khataon ko maaf kare. 🤲"
+                },
+                {
+                    english: "Wishing you a joyous Eid and a happy year ahead. Eid Mubarak {name}! 🎉",
+                    urdu: "Aap ko khush-gawar Eid aur khush-gawar aindah saal ki dua. Eid Mubarak {name}! 🎉"
+                },
+                {
+                    english: "May the blessings of Allah be with you today and always. Eid Mubarak {name}! 🌙",
+                    urdu: "Dua hai Khuda ki rehmat aap ke sath aaj aur hamesha rahe. Eid Mubarak {name}! 🌙"
+                },
+                {
+                    english: "Eid Mubarak {name}! Hope you have a wonderful time with your family and friends. 🥳",
+                    urdu: "Eid Mubarak {name}! Umeed hai aap apne khandaan aur doston ke sath acha waqt guzaren. 🥳"
+                }
+            ],
+            game: [
+                {
+                    english: "Game on {name}! 🎮 May your skills level up and victories multiply!",
+                    urdu: "Khel shuru {name}! 🕹️ Aap ke skills badhte rahein aur jeet ka silsila barhta rahe."
+                },
+                {
+                    english: "Wishing you epic wins and legendary gameplay {name}! Stay pro!",
+                    urdu: "Aap ko har game mein jeet aur maza aaye {name}! Pro player bane rahein."
+                },
+                {
+                    english: "May your headshots be accurate and your strategies brilliant {name}! GG!",
+                    urdu: "Aap ke headshots accurate aur strategies zabardast hon {name}! Shabash!"
+                },
+                {
+                    english: "Get ready to dominate the battlefield {name}! Wishing you countless victories! ⚔️",
+                    urdu: "Maidaan-e-jang par qabza jamanay ke liye tayyar ho jao {name}! Aap ke liye be-shumar fatahat ki dua! ⚔️"
+                },
+                {
+                    english: "May your gaming sessions be filled with epic moments and zero lag {name}! 🚀",
+                    urdu: "Dua hai aap ke gaming sessions epic lamhon se bhare hon aur koi lag na ho {name}! 🚀"
+                },
+                {
+                    english: "Wishing you the high scores and the winner's crown {name}! 👑",
+                    urdu: "Aap ke liye high scores aur jeetnay walay ka taj ki dua {name}! 👑"
+                },
+                {
+                    english: "Game like a pro, win like a champion! All the best {name}! 🏆",
+                    urdu: "Pro ki tarah khelo, champion ki tarah jeeto! Behtareen khush-qismati {name}! 🏆"
+                },
+                {
+                    english: "May your reflexes be lightning fast and your teamwork unbeatable {name}! ⚡",
+                    urdu: "Dua hai aap ke reflexes bijli ki tarah tez hon aur aap ki teamwork laa-jawab ho {name}! ⚡"
+                },
+                {
+                    english: "Wishing you flawless victories and endless fun in your gaming journey {name}! 🎯",
+                    urdu: "Aap ke gaming safar mein be-aib fatahat aur be-khataari mazay ki dua {name}! 🎯"
+                },
+                {
+                    english: "Keep calm and game on {name}! May you achieve all your gaming goals! 💪",
+                    urdu: "Pur-sukoon raho aur kheltay raho {name}! Dua hai aap apne tamam gaming goals hasil kar len! 💪"
+                }
+            ],
+            graduation: [
+                {
+                    english: "Congratulations on your graduation {name}! 🎓 Your hard work has paid off!",
+                    urdu: "Graduation par mubarakbad {name}! 🎓 Aap ki mehnat rang layi hai!"
+                },
+                {
+                    english: "Wishing you success in all your future endeavors {name}! Congratulations on graduating! 🌟",
+                    urdu: "Aap ke tamam aindah koshishon mein kamiyabi ki dua {name}! Graduation par mubarakbad! 🌟"
+                },
+                {
+                    english: "The future looks bright for you {name}! Congratulations on your graduation! ✨",
+                    urdu: "Aap ka mustaqbil bohat roshan nazar aata hai {name}! Graduation par mubarakbad! ✨"
+                },
+                {
+                    english: "Your graduation is just the beginning of a remarkable journey {name}! Congratulations! 🚀",
+                    urdu: "Aap ki graduation ek azeem safar ka aaghaz hai {name}! Mubarakbad! 🚀"
+                },
+                {
+                    english: "Well done on achieving this significant milestone {name}! The world is your oyster now! 🌍",
+                    urdu: "Is ahem maqam tak pohanchnay par shabash {name}! Ab duniya aap ke qadamoon mein hai! 🌍"
+                },
+                {
+                    english: "May your graduation be the foundation for a successful and happy life {name}! 🏛️",
+                    urdu: "Dua hai aap ki graduation kamiyab aur khush-hal zindagi ki bunyad banay {name}! 🏛️"
+                },
+                {
+                    english: "Congratulations {name}! Now go out there and conquer the world! 💫",
+                    urdu: "Mubarakbad {name}! Ab jao aur duniya par qabza karo! 💫"
+                },
+                {
+                    english: "Your degree is a ticket to your dreams {name}! Make the most of it! 🎫",
+                    urdu: "Aap ki degree aap ke sapnon ka ticket hai {name}! Is se behtreen fayda uthao! 🎫"
+                },
+                {
+                    english: "The tassel was worth the hassle! Congratulations on your graduation {name}! 🎓",
+                    urdu: "Tassel hassle ke laiq tha! Graduation par mubarakbad {name}! 🎓"
+                },
+                {
+                    english: "Today you're a graduate, tomorrow you're a world changer! Congratulations {name}! 🌟",
+                    urdu: "Aaj aap graduate hain, kal aap duniya badalnay walay hain! Mubarakbad {name}! 🌟"
+                }
+            ]
+        };
+
+        // Font Styles Data
+        const fontStyles = [
+            { name: "Bold", style: "font-bold", class: "font-bold text-lg" },
+            { name: "Italic", style: "italic", class: "italic text-lg" },
+            { name: "Bold Italic", style: "font-bold italic", class: "font-bold italic text-lg" },
+            { name: "Fancy", style: "font-serif", class: "font-serif text-lg" },
+            { name: "Monospace", style: "font-mono", class: "font-mono text-lg" },
+            { name: "Gaming", style: "neon-text", class: "neon-text text-lg text-orange-400" },
+            { name: "Elegant", style: "tracking-widest", class: "tracking-widest text-lg" },
+            { name: "Large", style: "text-xl", class: "text-xl font-bold" }
+        ];
+
+        // Generate Wishes
+        document.getElementById('generateBtn').addEventListener('click', generateWishes);
+        document.getElementById('regenerateBtn').addEventListener('click', generateWishes);
+        document.getElementById('generateFontsBtn').addEventListener('click', generateFonts);
+
+        function generateWishes() {
+            const name = document.getElementById('nameInput').value.trim();
+            const occasion = document.getElementById('occasionSelect').value;
+            const wishesContainer = document.getElementById('wishesContainer');
+            
+            if (!name) {
+                alert('Please enter a name first!');
+                return;
+            }
+            
+            // Show loading state
+            wishesContainer.innerHTML = `
+                <div class="col-span-3 text-center py-8">
+                    <div class="loading mx-auto mb-4"></div>
+                    <p class="text-orange-600 dark:text-orange-200">AI is generating your wishes...</p>
+                </div>
+            `;
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                const wishes = wishesData[occasion] || wishesData.birthday;
+                
+                wishesContainer.innerHTML = '';
+                
+                // Show 3 random wishes from the available ones
+                const shuffledWishes = [...wishes].sort(() => 0.5 - Math.random()).slice(0, 3);
+                
+                shuffledWishes.forEach((wish, index) => {
+                    const englishWish = wish.english.replace(/{name}/g, name);
+                    const urduWish = wish.urdu.replace(/{name}/g, name);
+                    
+                    const wishCard = document.createElement('div');
+                    wishCard.className = 'bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 card fade-in floating';
+                    wishCard.style.animationDelay = `${index * 0.2}s`;
+                    
+                    wishCard.innerHTML = `
+                        <div class="mb-4">
+                            <h3 class="font-bold text-orange-700 dark:text-orange-300 mb-2">Wish ${index + 1}</h3>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">${englishWish}</p>
+                            <p class="text-gray-700 dark:text-gray-300 text-right" dir="rtl">${urduWish}</p>
+                        </div>
+                        <div class="flex justify-between">
+                            <button class="copy-btn text-orange-600 dark:text-orange-400 hover:text-orange-800 dark:hover:text-orange-200">
+                                <i class="fas fa-copy mr-1"></i> Copy
+                            </button>
+                            <button class="download-btn text-orange-600 dark:text-orange-400 hover:text-orange-800 dark:hover:text-orange-200">
+                                <i class="fas fa-download mr-1"></i> Save
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Add copy functionality
+                    const copyBtn = wishCard.querySelector('.copy-btn');
+                    copyBtn.addEventListener('click', () => {
+                        navigator.clipboard.writeText(`${englishWish}\n\n${urduWish}`);
+                        
+                        // Visual feedback
+                        const originalText = copyBtn.innerHTML;
+                        copyBtn.innerHTML = '<i class="fas fa-check mr-1"></i> Copied!';
+                        setTimeout(() => {
+                            copyBtn.innerHTML = originalText;
+                        }, 2000);
+                    });
+                    
+                    // Add download functionality
+                    const downloadBtn = wishCard.querySelector('.download-btn');
+                    downloadBtn.addEventListener('click', () => {
+                        downloadWishAsImage(wishCard, `wish-${index+1}-${name}`);
+                    });
+                    
+                    wishesContainer.appendChild(wishCard);
+                });
+            }, 1500);
+        }
+
+        function generateFonts() {
+            const username = document.getElementById('usernameInput').value.trim();
+            const fontsContainer = document.getElementById('fontsContainer');
+            
+            if (!username) {
+                alert('Please enter a username first!');
+                return;
+            }
+            
+            fontsContainer.innerHTML = '';
+            
+            fontStyles.forEach((fontStyle, index) => {
+                const fontCard = document.createElement('div');
+                fontCard.className = 'bg-white dark:bg-gray-800 rounded-lg shadow p-4 card fade-in';
+                fontCard.style.animationDelay = `${index * 0.1}s`;
+                
+                fontCard.innerHTML = `
+                    <div class="mb-3">
+                        <p class="text-sm text-orange-700 dark:text-orange-300 mb-1">${fontStyle.name}</p>
+                        <p id="font-${index}" class="${fontStyle.class} text-gray-800 dark:text-gray-200 break-all">${username}</p>
+                    </div>
+                    <button class="copy-font-btn w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-3 rounded transition duration-300 text-sm">
+                        <i class="fas fa-copy mr-1"></i> Copy
+                    </button>
+                `;
+                
+                // Add copy functionality
+                const copyBtn = fontCard.querySelector('.copy-font-btn');
+                copyBtn.addEventListener('click', () => {
+                    const textToCopy = document.getElementById(`font-${index}`).textContent;
+                    navigator.clipboard.writeText(textToCopy);
+                    
+                    // Visual feedback
+                    const originalText = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<i class="fas fa-check mr-1"></i> Copied!';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalText;
+                    }, 2000);
+                });
+                
+                fontsContainer.appendChild(fontCard);
+            });
+        }
+
+        function downloadWishAsImage(element, filename) {
+            html2canvas(element).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `${filename}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+
+        // Initialize with some sample data
+        document.getElementById('nameInput').value = 'Ali';
+        document.getElementById('usernameInput').value = 'ProGamer';
+    </script>
+</body>
+</html>
